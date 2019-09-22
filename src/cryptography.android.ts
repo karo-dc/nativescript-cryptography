@@ -43,7 +43,6 @@ export class Cryptography {
           AndroidKeyStore,
         )
       : KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA);
-    console.info('999999999991');
 
     const params = new KeyGenParameterSpec.Builder(
       tag,
@@ -54,10 +53,7 @@ export class Cryptography {
       .setSignaturePaddings([KeyProperties.SIGNATURE_PADDING_RSA_PKCS1])
       .setKeySize(keySize)
       .build();
-
-    console.info('999999999992 ', params);
     keyGenerator.initialize(params);
-    console.info('KeyGenerator_Init');
     return new RsaKey(keyGenerator.generateKeyPair());
   }
 
@@ -80,12 +76,10 @@ export class Cryptography {
     const cipher = Cipher.getInstance(alg);
     cipher.init(Cipher.ENCRYPT_MODE, rsaKey.getPublicKey());
     const encryptedByteData = cipher.doFinal(textToEncryptBytes);
-    console.info('EncryptedByteData: ', encryptedByteData);
     const textEncryptedBase64 = Base64.encodeToString(
       encryptedByteData,
       Base64.DEFAULT,
     );
-    console.info('Base64Encoded: ', textEncryptedBase64);
     return textEncryptedBase64;
   }
 
@@ -95,16 +89,10 @@ export class Cryptography {
     alg: RsaEncryptionAlgorithm,
   ): string {
     const bytes = Base64.decode(encryptedData, Base64.NO_WRAP);
-    console.info('WWWW: ', pair.getPrivateKeyValue());
     const cipher = Cipher.getInstance(alg);
-    console.info('WWWW1: ', cipher);
     cipher.init(Cipher.DECRYPT_MODE, pair.getPrivateKeyValue());
-    console.info('WWWW2');
     const decryptedByteData = cipher.doFinal(bytes);
-    console.info('DecryptedByteData: ', decryptedByteData);
-    const rrr = new java.lang.String(decryptedByteData);
-    console.info('NormalString: ', rrr);
-    return rrr.toString();
+    return new java.lang.String(decryptedByteData).toString();
   }
 
   public sign(
@@ -113,13 +101,10 @@ export class Cryptography {
     alg: RsaHashAlgorithm,
     returnAsBase64?: boolean,
   ): ArrayBuffer | string {
-    console.info('UUUU1: ', alg);
     const signEngine = Signature.getInstance(alg);
     signEngine.initSign(key.getPrivateKeyValue());
     signEngine.update(this.stringToByteArray(data));
-    console.info('UUUU2: ');
     const sign = signEngine.sign();
-    console.info('UUUU3: ', sign);
     if (returnAsBase64) {
       return Base64.encodeToString(sign, Base64.NO_WRAP);
     }

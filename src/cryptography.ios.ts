@@ -15,12 +15,6 @@ export enum RsaEncryptionAlgorithm {
   OAEP_SHA256 = kSecKeyAlgorithmRSAEncryptionOAEPSHA256,
   OAEP_SHA384 = kSecKeyAlgorithmRSAEncryptionOAEPSHA384,
   OAEP_SHA512 = kSecKeyAlgorithmRSAEncryptionOAEPSHA512,
-  // RSA Encryption OAEP AESGCM
-  OAEP_SHA1_AESGCM = kSecKeyAlgorithmRSAEncryptionOAEPSHA1AESGCM,
-  OAEP_SHA224_AESGCM = kSecKeyAlgorithmRSAEncryptionOAEPSHA224AESGCM,
-  OAEP_SHA256_AESGCM = kSecKeyAlgorithmRSAEncryptionOAEPSHA256AESGCM,
-  OAEP_SHA384_AESGCM = kSecKeyAlgorithmRSAEncryptionOAEPSHA384AESGCM,
-  OAEP_SHA512_AESGCM = kSecKeyAlgorithmRSAEncryptionOAEPSHA512AESGCM,
 }
 
 export class Cryptography {
@@ -48,10 +42,8 @@ export class Cryptography {
       const error = new interop.Reference<NSError>();
       const privateKey = SecKeyCreateRandomKey(generalAttrs, error);
       if (privateKey === null) {
-        console.error('No key returned: ', error.value);
         throw error;
       } else {
-        console.log('Key returned: ', privateKey);
         return new RsaKey(privateKey);
       }
     } catch (error) {
@@ -74,7 +66,6 @@ export class Cryptography {
 
     const privateKeyRef = new interop.Reference<any>();
     const status = SecItemCopyMatching(attrs, privateKeyRef);
-    console.info('PrivateKeyFromChain: ', privateKeyRef.value);
     return new RsaKey(privateKeyRef.value);
   }
 
@@ -91,8 +82,6 @@ export class Cryptography {
       rawData,
       error,
     );
-    console.info('ERROPasz: ', error.value);
-    console.info('Data_From_Private_Key: ', encryptedData);
     return encryptedData.base64Encoding();
   }
 
@@ -195,15 +184,9 @@ export class RsaKey {
       publicKeyData: NSData;
 
     try {
-      // get public key ref via private key
       publicKeyRef = SecKeyCopyPublicKey(this.privateKeyValue);
-      // replace public key to readable data
       publicKeyData = SecKeyCopyExternalRepresentation(publicKeyRef, error);
-
-      console.info('Error: ', error);
       const publicKeyBase64 = publicKeyData.base64Encoding();
-      console.info('PublicKeyBase64: ', publicKeyBase64);
-
       if (error && error.value) {
         throw error.value.localizedDescription;
       }

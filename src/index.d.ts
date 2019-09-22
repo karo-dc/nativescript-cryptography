@@ -16,11 +16,6 @@ export declare enum RsaEncryptionAlgorithm {
   OAEP_SHA256,
   OAEP_SHA384,
   OAEP_SHA512,
-  OAEP_SHA1_AESGCM,
-  OAEP_SHA224_AESGCM,
-  OAEP_SHA256_AESGCM,
-  OAEP_SHA384_AESGCM,
-  OAEP_SHA512_AESGCM,
 }
 
 export declare class Cryptography {
