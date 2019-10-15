@@ -25,6 +25,7 @@ export declare class Cryptography {
     isSaveInSecureStorage?: boolean,
   ): RsaKey;
   public loadExistingRsaPrivateKeyByTag(tag: string): RsaKey;
+  public removeRsaPrivateKeyByTag(tag: string);
   public sign(
     data: string,
     privateKey: RsaKey,

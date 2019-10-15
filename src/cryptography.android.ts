@@ -67,6 +67,16 @@ export class Cryptography {
     return new RsaKey(new KeyPair(pubKey, privKey));
   }
 
+  public removeRsaPrivateKeyByTag(tag: string) {
+    if (tag == null) {
+      return null;
+    }
+    const keyStore = KeyStore.getInstance(AndroidKeyStore);
+    keyStore.load(null);
+    keyStore.deleteEntry(tag);
+    new RsaKey(null);
+  }
+
   public encryptViaPublicKey(
     data: string,
     rsaKey: RsaKey,

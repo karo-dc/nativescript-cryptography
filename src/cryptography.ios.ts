@@ -60,13 +60,25 @@ export class Cryptography {
     attrs.setValueForKey(kSecClassKey, kSecClass);
     attrs.setValueForKey(kSecAttrKeyClassPrivate, kSecAttrKeyClass);
     attrs.setValueForKey(kSecAttrKeyTypeRSA, kSecAttrKeyType);
-    attrs.setValueForKey(2048, kSecAttrKeySizeInBits);
     attrs.setValueForKey(tag, kSecAttrApplicationTag);
     attrs.setValueForKey(true, kSecReturnRef);
 
     const privateKeyRef = new interop.Reference<any>();
     const status = SecItemCopyMatching(attrs, privateKeyRef);
     return new RsaKey(privateKeyRef.value);
+  }
+
+  public removeRsaPrivateKeyByTag(tag: string) {
+    if (tag == null) {
+      return null;
+    }
+    const attrs = NSMutableDictionary.alloc().init();
+    attrs.setValueForKey(kSecClassKey, kSecClass);
+    attrs.setValueForKey(kSecAttrKeyClassPrivate, kSecAttrKeyClass);
+    attrs.setValueForKey(tag, kSecAttrApplicationTag);
+    attrs.setValueForKey(true, kSecReturnRef);
+    const status = SecItemDelete(attrs);
+    new RsaKey(null);
   }
 
   public encryptViaPublicKey(
